@@ -13,10 +13,16 @@ public class PlayerMovement : MonoBehaviour {
     private float groundRadius = 0.25f;
     public LayerMask whatIsGround;
 
+	public bool jumped; 
+
+	public AudioSource JumpSound;
+
+	private Animator anim; 
 
     private void Awake()
     {
         rb2d = GetComponent<Rigidbody2D>();
+		anim = GetComponent<Animator> ();
     }
 
     // Use this for initialization
@@ -35,6 +41,16 @@ public class PlayerMovement : MonoBehaviour {
         if (Input.GetButtonDown("Jump") && grounded) {
             rb2d.AddForce(Vector2.up * jumpForce);
             grounded = false;
+			JumpSound.Play ();
+			anim.SetTrigger ("Jump"); 
+			jumped = true;
+
         }
+
+		if (grounded && jumped) 
+		{
+			anim.SetTrigger ("Land"); 
+			jumped = false; 
+		}
 	}
 }
